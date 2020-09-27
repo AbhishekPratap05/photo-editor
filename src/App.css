@@ -12,12 +12,19 @@
 
 .main-image-div{
   grid-area: image;
-  width: 100%;
-  height: 100%;
   display: flex;
+  width:100%;
+  height: 100%;
   justify-content: center;
 }
 .main-image{
+  width:100%;
+  max-width: 720px;
+  min-width: 600px;
+  height:100%;
+  min-height:600px;
+  max-height: 700px;
+  object-fit:scale-down;
   align-self: center;
 }
 
@@ -139,11 +146,11 @@
 	padding: 22px 18px;
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 700px) {
   .container{
     display: grid;
     grid-template-columns:1fr;
-    grid-template-rows:4fr 50px 1fr;
+    grid-template-rows:3fr 50px 1fr;
     grid-template-areas: 
     "image"
     "slider"
@@ -165,6 +172,23 @@
     cursor: pointer;
     margin-top: 1rem;
     margin-bottom: 1rem;
+  }
+  .main-image-div{
+    grid-area: image;
+    display: flex;
+    width:100%;
+    height: 100%;
+    justify-content: center;
+  }
+  .main-image{
+    width:98%;
+    max-width: 85%;
+    min-width: 300px;
+    height:100%;
+    min-height:400px;
+    max-height: 500px;
+    object-fit:scale-down;
+    align-self: center;
   }
   .sidebar-item {
     width: 100%;
