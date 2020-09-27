@@ -1,15 +1,45 @@
+:root {
+  --element-background-color :#7f8ff4;
+  --element-background-color-active :#6c7ff2;
+  --button-active: #7f8ff4;
+}
+
+.theme-button{
+  font-size: 1.8rem;
+}
+.download-button{
+  font-size: 1.8rem;
+  margin-left: auto;
+}
+.header-container{
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  grid-area:header;
+  background-color: black;
+  color:white
+}
+.heading{
+  margin-left: auto;
+}
 .container{
   display: grid;
   grid-template-columns:1fr auto;
-  grid-template-rows:1fr auto;
+  grid-template-rows:auto 1fr auto;
   grid-template-areas: 
+  "header header"
   "image sidebar"
   "slider sidebar";
   height: 100vh;
   width:100vw;
-  gap: 5px;
 }
 
+.heading{
+  display: inline;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 5px;
+}
 .main-image-div{
   grid-area: image;
   display: flex;
@@ -30,34 +60,40 @@
 
 .sidebar {
   grid-area: sidebar;
-  background-color: hsl(265,100%,86%);
-  border-left:1px solid hsl(265, 100%, 56%);
+  width:160px;
+  background-color:var(--element-background-color);
+  border-left:1px solid var(--element-background-color-active);
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  text-align-last: left;
 }
 
 .sidebar-item {
   width: 100%;
   cursor: pointer;
   border: none;
+  font-weight: 500;
+  font-size: 0.9rem;
   outline: none;
-  background-color: hsl(265,100%,86%);
-  padding:1rem;
+  background-color:var(--element-background-color);
+  padding:1.2rem 1rem;
   position: relative;
   transition: background-color 150ms;
+  color:#fff
 }
 
 .sidebar-item:nth-child(10){
   margin-top: auto;
+  color:white
 }
 
 .sidebar-item:hover, .sidebar-item:focus {
-  background-color: hsl(265,100%,76%);
+  background-color: var(--element-background-color-active);
 }
 
 .sidebar-item.active{
-  background-color: hsl(265,100%,70%);
+  background-color: var(--element-background-color-active);
 }
 .sidebar-item::after{
   content: "";
@@ -66,7 +102,7 @@
   left: 10%;
   bottom: 0;
   height: 1px;
-  background-color: hsl(265, 100%, 46%);
+  background-color:var(--button-active);
 }
 .sidebar-item:nth-child(9)::after,.sidebar-item:nth-child(10)::after{
   display: none;
@@ -105,7 +141,7 @@
 #upload-file::-webkit-file-upload-button{
  border: 0;
  outline: 0;
- background: #7f8ff4;
+ background:var(--element-background-color);
  color: #fff;
  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
  border-radius: 2px;
@@ -129,7 +165,7 @@
 }
 
 .btn--primary {
-	background: #7f8ff4;
+	background:var(--element-background-color);
 	color: #fff;
 	box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
 	border-radius: 2px;
@@ -137,11 +173,11 @@
 }
 
 .btn--primary:hover {
-	background: #6c7ff2;
+	background: --element-background-color-active;
 }
 
 .btn--primary:active {
-	background: #7f8ff4;
+	background: var(--button-active);
 	box-shadow: inset 0 0 10px 2px rgba(0, 0, 0, 0.2);
 }
 
@@ -174,8 +210,9 @@
   .container{
     display: grid;
     grid-template-columns:1fr;
-    grid-template-rows:3fr 50px 1fr;
+    grid-template-rows:50px 3fr 50px 1fr;
     grid-template-areas: 
+    "header"
     "image"
     "slider"
     "sidebar";
@@ -185,11 +222,16 @@
   }
   .sidebar {
     grid-area: sidebar;
-    background-color: hsl(265,100%,86%);
-    border-left:1px solid hsl(265, 100%, 56%);
+    width: 100%;
+    background-color:var(--element-background-color);
+    border-left:1px solid var(--element-background-color-active);
     display: flex;
     flex-direction: column;
     align-items: stretch;
+    text-align-last: center;
+  }
+  .slider-div{
+    width: 85%;
   }
   .slider {
     width: 100%;
@@ -203,6 +245,9 @@
     width:100%;
     height: 100%;
     justify-content: center;
+  }
+  .form-container{
+    flex-grow: 0.7;
   }
   .main-image{
     width:98%;
@@ -219,7 +264,7 @@
     cursor: pointer;
     border: none;
     outline: none;
-    background-color: hsl(265,100%,86%);
+    background-color:var(--element-background-color);
     padding:0.7rem;
     position: relative;
     transition: background-color 150ms;
@@ -234,12 +279,12 @@
     left: 0%;
     bottom: 0;
     height: 1px;
-    background-color: hsl(265, 100%, 46%);
+    background-color: var(--button-active);
   }
   .form__field {
-    width: 90%;
+    width: 95%;
     background: #fff;
-    color: #A3A3F5;
+    color:var(--element-background-color);
     font: inherit;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1);
     border: 0;
@@ -247,9 +292,9 @@
     padding: 18px 14px;
   }
   .form__field__file {
-    width: 90%;
+    width: 95%;
     background: #fff;
-    color: #A3A3F5;
+    color: var(--element-background-color);
     font: inherit;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.1);
     border: 0;
