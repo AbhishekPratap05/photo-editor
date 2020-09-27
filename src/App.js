@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useRef} from 'react';
 import Slider from './Slider';
 import './App.css';
 import SidebarItem from './SidebarItem';
@@ -88,16 +88,37 @@ const DEFAULT_OPTIONS = [
     unit:"px"
   },
 ]
+const SUPPORTED_FILE = ["image/png","image/jpeg","image/jpg"];
 function App() {
   const [imageAvailable,setImageAvailable] = useState(false);
   const [url,setUrl]=useState("");
+  const [file,setFile]=useState();
   const [selectedOptionIndex,setSelectedOptionIndex] =useState(0);
   const [options,setOptions] = useState(DEFAULT_OPTIONS);
+  const canvas = useRef();
+
   const selectedOption  = options[selectedOptionIndex];
-  const getImage =(url)=>{
-    setUrl(url);
-    url!==""&&setImageAvailable(true);
+  const getImage =(urlReceived)=>{
+    const regex= /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm
+    if(regex.test(urlReceived)){
+      setUrl(urlReceived);
+      setImageAvailable(true);
+    } else alert("Invalid Url");
   }
+
+  const setImage=(fileReceive)=>{
+    if(fileReceive && SUPPORTED_FILE.includes(fileReceive.type)){
+      setFile(fileReceive);
+    }else if(!fileReceive){
+      setFile();
+      return;
+    }else if(!SUPPORTED_FILE.includes(fileReceive.type)){
+      alert("Invalid image type only supports png and jpg");
+      setFile();
+      return;
+    }
+  }
+
   const handleSliderChange =({target})=>{
     setOptions(prevOptions=>{
       return prevOptions.map((option, index)=>{
@@ -115,18 +136,26 @@ function App() {
     })
     return {filter:filters.join(' ')}
   }
+
   return (
     !imageAvailable ?
       
       <div className="getImage">
       <GetImage
         getImage={getImage}
+        setFile={setImage}
       />
       </div> 
       :
       <div className="container">
           <div className="main-image-div">
-          <img className="main-image" src={`${url}`} alt="edited pic" style={getImageStyle()}/>
+          {/* {!imageAvailable ?
+            <canvas id="canvas" ref={canvas}></canvas>
+            :
+            <img className="main-image" src={`${url}`} alt="edited pic" style={getImageStyle()}/>
+           } */}
+            <canvas id="canvas" ref={canvas}></canvas>
+            <img className="main-image" src={`${url}`} alt="edited pic" style={getImageStyle()}/>
           </div>
           <div className="sidebar">
           {options.map((option,index)=>{
