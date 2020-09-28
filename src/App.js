@@ -22,7 +22,6 @@ function App() {
   }
 
   const setImageFromDevice=(fileReceive)=>{
-    console.log(fileReceive)
     if(fileReceive && SUPPORTED_FILE.includes(fileReceive.type)){
       setFile(fileReceive);
     }else if(!fileReceive){

@@ -26,7 +26,7 @@ export default function SelectImage({getImage,setFile,setFileMode}) {
                 <br/>
                 <span className="form">
                     <h3>Get image from device <span role="img" aria-label="phone">📱/💻</span></h3>
-                    <input type="file" placeholder="select Image" ref={fileRef} className="form__field__file" id="upload-file" onChange={()=>fileSelect()}/>
+                    <input type="file" placeholder="select Image" ref={fileRef} accept="image/x-png,image/jpeg"  className="form__field__file" id="upload-file" onChange={()=>fileSelect()}/>
                 </span>
             </div>
         </div>

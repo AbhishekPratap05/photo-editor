@@ -92,6 +92,7 @@ export default function Editor({url,file,fileMode}) {
     
     const [selectedOptionIndex,setSelectedOptionIndex] =useState(0);
     const [options,setOptions] = useState(DEFAULT_OPTIONS);
+    const [filename,setFileName] = useState('');
     const canvasEl = useRef();
 
     const selectedOption  = options[selectedOptionIndex];
@@ -114,29 +115,21 @@ export default function Editor({url,file,fileMode}) {
         })
         return {filter:filters.join(' ')}
       }
-      useEffect(() => {
-        setImageToCanvas(url,file,fileMode);
-      }, [url,file,fileMode])
+      const setImageToCanvas=()=>{
+          fileMode === 'url' ? urlImageToCanvas() : loadedImageToCanvas();
+      }
+      useEffect(setImageToCanvas, [url,file,fileMode])
 
-    const setImageToCanvas=(url,file,fileMode)=>{
-        let img = new Image();
-        let filename='';
+
+
+    const loadedImageToCanvas =()=>{
         const canvas = canvasEl.current;
         const ctx =  canvas.getContext('2d');
-        if(fileMode==='url'){
-            filename = Math.floor(Math.random()*10000000)+'';
-            img.src=url;
-            img.onload=()=>{
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img,0,0, img.width,img.height);
-                canvas.removeAttribute('data-caman-id');
-            }
-        }else{
-            filename= file.name;
-            const reader = new FileReader();
-            reader.readAsDataURL(file)
-            reader.addEventListener('load',()=>{
+        let img = new Image();
+        setFileName(file.name);
+        const reader = new FileReader();
+        reader.readAsDataURL(file)
+        reader.addEventListener('load',()=>{
             img.src= reader.result;
             img.onload=()=>{
                 canvas.width = img.width;
@@ -144,9 +137,47 @@ export default function Editor({url,file,fileMode}) {
                 ctx.drawImage(img,0,0, img.width,img.height);
                 canvas.removeAttribute('data-caman-id');
             }
-        })
-        }
+        },false)
     }
+
+    const urlImageToCanvas =()=>{
+        const canvas = canvasEl.current;
+        const ctx =  canvas.getContext('2d');
+        let img = new Image();
+        img.crossOrigin="Anonymous";
+        setFileName(Math.floor(Math.random()*10000000));
+        img.addEventListener("load", ()=>{
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img,0,0, img.width,img.height);
+            canvas.removeAttribute('data-caman-id');
+        }, false);
+        img.src=url;
+    }
+
+    const download=(canvasElf)=>{ //filename with extenstion
+        let e;
+        const link = document.createElement('a')
+        let fNameWithoutExt ='';
+        const fNameArry = filename.split('.');
+        const fileExt=fNameArry[fNameArry.length -1]
+        if(fileMode ==='url'){
+            fNameWithoutExt=filename;
+        }else{
+            fNameWithoutExt = filename.slice(0,-fileExt.length-1);
+        }
+        const fNameWithExt = fNameWithoutExt+'-edited.'+fileExt;
+        link.download=fNameWithExt;
+        const canvas = canvasEl.current;
+        fileExt === 'png' ?
+        link.href=canvas.toDataURL('image/png',0.9)
+        :
+        link.href=canvas.toDataURL('image/jpeg',0.9);
+
+        e = new MouseEvent('click')
+        link.dispatchEvent(e);
+      
+      }
     return (
         <>
             <div className="main-image-div">
@@ -175,6 +206,7 @@ export default function Editor({url,file,fileMode}) {
                 value={selectedOption.value}
                 handleChange={handleSliderChange}
             />
+            <button onClick={download}></button>
         </>
     )
 }
