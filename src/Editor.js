@@ -93,6 +93,7 @@ export default function Editor({url,file,fileMode}) {
     const [selectedOptionIndex,setSelectedOptionIndex] =useState(0);
     const [options,setOptions] = useState(DEFAULT_OPTIONS);
     const [filename,setFileName] = useState('');
+    const [imgProperties,setImaProperties] = useState({width:0,height:0})
     const canvasEl = useRef();
 
     const selectedOption  = options[selectedOptionIndex];
@@ -134,6 +135,7 @@ export default function Editor({url,file,fileMode}) {
             img.onload=()=>{
                 canvas.width = img.width;
                 canvas.height = img.height;
+                setImaProperties({width:img.width,height:img.height});
                 ctx.drawImage(img,0,0, img.width,img.height);
                 canvas.removeAttribute('data-caman-id');
             }
@@ -146,16 +148,25 @@ export default function Editor({url,file,fileMode}) {
         let img = new Image();
         img.crossOrigin="Anonymous";
         setFileName(Math.floor(Math.random()*10000000));
-        img.addEventListener("load", ()=>{
+        img.onload=()=>{
+            console.log("url")
             canvas.width = img.width;
             canvas.height = img.height;
+            setImaProperties({width:img.width,height:img.height});
             ctx.drawImage(img,0,0, img.width,img.height);
             canvas.removeAttribute('data-caman-id');
-        }, false);
+        };
         img.src=url;
     }
-
-    const download=(canvasElf)=>{ //filename with extenstion
+    
+    const download=()=>{
+        const downloadCanvas = document.createElement('canvas');
+        const ctx = downloadCanvas.getContext('2d');
+        downloadCanvas.width = imgProperties.width;
+        downloadCanvas.height = imgProperties.height;
+        const filterToBeApplied = getComputedStyle(canvasEl.current).filter;
+        ctx.filter = filterToBeApplied;
+        ctx.drawImage(canvasEl.current,0,0);
         let e;
         const link = document.createElement('a')
         let fNameWithoutExt ='';
@@ -168,11 +179,10 @@ export default function Editor({url,file,fileMode}) {
         }
         const fNameWithExt = fNameWithoutExt+'-edited.'+fileExt;
         link.download=fNameWithExt;
-        const canvas = canvasEl.current;
         fileExt === 'png' ?
-        link.href=canvas.toDataURL('image/png',0.9)
+        link.href=downloadCanvas.toDataURL('image/png',0.97)
         :
-        link.href=canvas.toDataURL('image/jpeg',0.9);
+        link.href=downloadCanvas.toDataURL('image/jpeg',0.97);
 
         e = new MouseEvent('click')
         link.dispatchEvent(e);
@@ -182,7 +192,6 @@ export default function Editor({url,file,fileMode}) {
         <>
             <div className="main-image-div">
                 <canvas id="canvas" className="main-image" ref={canvasEl} style={getImageStyle()}/>
-                {/* <img className="main-image" src={`${url}`} alt="edited pic" style={getImageStyle()}/> */}
             </div>
             <div className="sidebar">
                 {options.map((option,index)=>{
