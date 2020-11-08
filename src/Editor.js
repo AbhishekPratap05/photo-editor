@@ -88,7 +88,7 @@ const DEFAULT_OPTIONS = [
     },
   ]
   
-export default function Editor({url,file,fileMode}) {
+export default function Editor({url,file,fileMode,downloadFlag,setDownload}) {
     
     const [selectedOptionIndex,setSelectedOptionIndex] =useState(0);
     const [options,setOptions] = useState(DEFAULT_OPTIONS);
@@ -146,16 +146,15 @@ export default function Editor({url,file,fileMode}) {
         const canvas = canvasEl.current;
         const ctx =  canvas.getContext('2d');
         let img = new Image();
-        img.crossOrigin="Anonymous";
-        setFileName(Math.floor(Math.random()*10000000));
+        setFileName(Math.floor(Math.random()*10000000).toString());
         img.onload=()=>{
-            console.log("url")
             canvas.width = img.width;
             canvas.height = img.height;
             setImaProperties({width:img.width,height:img.height});
             ctx.drawImage(img,0,0, img.width,img.height);
             canvas.removeAttribute('data-caman-id');
         };
+        img.crossOrigin = 'Anonymous';
         img.src=url;
     }
     
@@ -171,11 +170,12 @@ export default function Editor({url,file,fileMode}) {
         const link = document.createElement('a')
         let fNameWithoutExt ='';
         const fNameArry = filename.split('.');
-        const fileExt=fNameArry[fNameArry.length -1]
+        let fileExt="jpeg"
         if(fileMode ==='url'){
             fNameWithoutExt=filename;
         }else{
             fNameWithoutExt = filename.slice(0,-fileExt.length-1);
+            fileExt=fNameArry[fNameArry.length -1]
         }
         const fNameWithExt = fNameWithoutExt+'-edited.'+fileExt;
         link.download=fNameWithExt;
@@ -186,7 +186,7 @@ export default function Editor({url,file,fileMode}) {
 
         e = new MouseEvent('click')
         link.dispatchEvent(e);
-      
+        setDownload(false)
       }
     return (
         <>
@@ -215,7 +215,7 @@ export default function Editor({url,file,fileMode}) {
                 value={selectedOption.value}
                 handleChange={handleSliderChange}
             />
-            <button onClick={download}></button>
+            {downloadFlag && download()}
         </>
     )
 }

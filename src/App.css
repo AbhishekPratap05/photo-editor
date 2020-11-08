@@ -10,6 +10,7 @@
 .download-button{
   font-size: 1.8rem;
   margin-left: auto;
+  cursor: pointer;
 }
 .header-container{
   position: relative;
@@ -302,7 +303,8 @@
     padding: 8px;
   }
   .btn--inside {
-    margin-left: 0;
+    margin-left: 50%;
     margin-top: 10px;
+    transform: translateX(-50%);
   }
 }

@@ -11,6 +11,7 @@ function App() {
   const [url,setUrl]=useState("");
   const [file,setFile]=useState();
   const [fileMode,setFileMode]=useState('url');
+  const [download,setDownload]=useState(false)
 
   
   const getImage =(urlReceived)=>{
@@ -43,12 +44,17 @@ function App() {
     url && setUrl('');
     file && setFile();
   }
+
+  const downloadImage=(flag)=>{
+    setDownload(flag);
+  }
   
   return (
     <div className="container">
         <Heading
           click={clickHome}
           imageAvailable={imageAvailable}
+          setDownload={downloadImage}
         />
         {!imageAvailable ?
         <SelectImage
@@ -61,6 +67,8 @@ function App() {
           url={url}
           file={file}
           fileMode={fileMode}
+          downloadFlag={download}
+          setDownload={downloadImage}
         />
         }
     </div>
